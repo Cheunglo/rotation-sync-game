@@ -1,8 +1,8 @@
 const CONFIG = {
     ALIGNMENT_GOAL_TIME: 2.0,     
     FAILURE_LIMIT_TIME: 5.0,      
-    ALIGNMENT_THRESHOLD: 0.45,    
-    PERFECT_THRESHOLD: 0.10,      
+    ALIGNMENT_THRESHOLD: 0.30,    
+    PERFECT_THRESHOLD: 0.06,      
     TARGET_BASE_SPEED: 0.4,       
     TARGET_SPEED_VARIANCE: 0.6,   
     LEVEL_DIFFICULTY_STEP: 0.25,  
@@ -10,9 +10,8 @@ const CONFIG = {
     PLAYER_MAX_SPEED: 6.0,        
     PLAYER_MIN_SPEED: 0.5,        
     PLAYER_SPEED_ACCEL: 2.0,      
-    CENTER_X: 400,                
-    CENTER_Y: 300,                
-    SIDEBAR_START_X: 800,         
+    
+    // Geometry dimensions
     RING_RADIUS: 100,             
     NOTCH_WIDTH: 20,              
     NOTCH_HEIGHT: 20,             
@@ -24,16 +23,46 @@ const CONFIG = {
     TARGET_COLOR: "#FF3333",      
     COLOR_MISALIGNED: "#FFA500",  
     COLOR_TRACKING: "#00FF00",    
-    COLOR_PERFECT: "#00FFFF",      
-    FAILURE_DECREASE_PER_LEVEL: 0.2, // How many seconds the danger timer shrinks per level
-    FAILURE_LIMIT_FLOOR: 1.5         // The absolute minimum time floor (in seconds) the game will shrink to
+    COLOR_PERFECT: "#00FFFF",
+
+    // Difficulty modifiers
+    FAILURE_DECREASE_PER_LEVEL: 0.2, 
+    FAILURE_LIMIT_FLOOR: 1.5         
 };
 
-// Core Canvas references
+// Core Canvas and global layout sizing variables
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-// Shared State Variables
+// Dynamic layout metrics altered by resize handler
+let isMobile = false;
+let center_x = 400;
+let center_y = 300;
+let sidebar_start_x = 800;
+
+function resizeCanvas() {
+    // Determine if layout should treat screen as mobile portrait or desktop landscape
+    isMobile = window.innerWidth < 850;
+
+    if (isMobile) {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        center_x = canvas.width / 2;
+        center_y = canvas.height * 0.4; // Push play ring slightly up to leave space for text/buttons
+        sidebar_start_x = 0; // Stacks text underneath
+    } else {
+        canvas.width = 1100;
+        canvas.height = 600;
+        center_x = 400;
+        center_y = 300;
+        sidebar_start_x = 800;
+    }
+}
+// Run immediately on boot
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
+
+// Shared State Trackers
 let level = 0;              
 let gameOver = false;
 let lastTime = performance.now();
@@ -44,8 +73,42 @@ let isPerfectTracking = false;
 let perfectStreakTimer = 0;   
 let skipFeedbackTimer = 0;    
 
-// Keyboard Tracking Checklist
+// ==========================================
+//          INPUT TRACKING ENGINE
+// ==========================================
 const keys = {};
 window.addEventListener("keydown", (e) => keys[e.key] = true);
 window.addEventListener("keyup", (e) => keys[e.key] = false);
+
+// --- TOUCH ZONE INTERFACES FOR MOBILE ---
+window.addEventListener("touchstart", (e) => {
+    // If the game is over, tapping anywhere on a touch device resets it
+    if (gameOver) {
+        resetGame();
+        return;
+    }
+
+    const touchX = e.touches[0].clientX;
+    const touchY = e.touches[0].clientY;
+
+    // Mobile layout divides input actions across screen quadrants
+    if (isMobile) {
+        if (touchY > window.innerHeight * 0.75) {
+            // Tapping the absolute bottom quadrant triggers speed acceleration boost cycling
+            player.speed = player.speed >= CONFIG.PLAYER_MAX_SPEED ? CONFIG.PLAYER_MIN_SPEED : player.speed + 1.5;
+        } else {
+            // Otherwise left half turns left, right half turns right
+            if (touchX < window.innerWidth / 2) {
+                keys["ArrowLeft"] = true;
+            } else {
+                keys["ArrowRight"] = true;
+            }
+        }
+    }
+});
+
+window.addEventListener("touchend", () => {
+    keys["ArrowLeft"] = false;
+    keys["ArrowRight"] = false;
+});
 

@@ -2,16 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <!-- Critical for mobile scaling and preventing accidental zooming -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Rotation Sync Game</title>
     <style>
-        body { margin: 0; background: #111; display: flex; justify-content: center; align-items: center; height: 100vh; }
-        canvas { border: 2px solid #fff; background: #000; }
+        body { 
+            margin: 0; 
+            background: #111; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh;
+            overflow: hidden; /* Prevents bounce scrolling on mobile */
+            touch-action: none; /* Prevents default browser swipe gestures */
+        }
+        canvas { 
+            border: 2px solid #fff; 
+            background: #000; 
+        }
     </style>
 </head>
 <body>
-    <canvas id="gameCanvas" width="1100" height="600"></canvas>
+    <!-- Width and height removed; handled dynamically in config.js now -->
+    <canvas id="gameCanvas"></canvas>
 
-    <!-- The order here is critical: Config and engine variables must load first -->
     <script src="config.js"></script>
     <script src="entities.js"></script>
     <script src="ui.js"></script>

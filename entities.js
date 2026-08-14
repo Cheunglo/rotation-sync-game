@@ -1,4 +1,3 @@
-// Target Object
 const target = {
     angle: 0,
     currentSpeed: CONFIG.TARGET_BASE_SPEED,      
@@ -20,7 +19,7 @@ const target = {
 
     draw: function() {
         ctx.save();
-        ctx.translate(CONFIG.CENTER_X, CONFIG.CENTER_Y);
+        ctx.translate(center_x, center_y); // Dynamic position
         ctx.rotate(this.angle);
         ctx.fillStyle = CONFIG.TARGET_COLOR; 
         ctx.beginPath();
@@ -33,7 +32,6 @@ const target = {
     }
 };
 
-// Player Object
 const player = {
     angle: 0,
     speed: CONFIG.PLAYER_START_SPEED,             
@@ -59,7 +57,7 @@ const player = {
 
         // Guidelines
         ctx.save();
-        ctx.translate(CONFIG.CENTER_X, CONFIG.CENTER_Y);
+        ctx.translate(center_x, center_y);
         ctx.rotate(this.angle);
         ctx.strokeStyle = CONFIG.GUIDE_LINE_COLOR; 
         ctx.lineWidth = 2;
@@ -69,9 +67,9 @@ const player = {
         ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(Math.sin(CONFIG.ALIGNMENT_THRESHOLD) * extensionDistance, -Math.cos(CONFIG.ALIGNMENT_THRESHOLD) * extensionDistance); ctx.stroke();
         ctx.restore();
 
-        // Active Player Ring UI
+        // Player Ring
         ctx.save();
-        ctx.translate(CONFIG.CENTER_X, CONFIG.CENTER_Y);
+        ctx.translate(center_x, center_y);
         ctx.rotate(this.angle);
         ctx.strokeStyle = playerColor; 
         ctx.lineWidth = 4;
@@ -85,11 +83,10 @@ const player = {
     }
 };
 
-// Background Stars Collection arrays
 const stars = [];
 for (let i = 0; i < CONFIG.STAR_COUNT; i++) {
     const angle = Math.random() * Math.PI * 2;
-    const distance = Math.sqrt(Math.random()) * (CONFIG.CENTER_X * 0.9);
+    const distance = Math.sqrt(Math.random()) * 400; // General circular cluster
     stars.push({
         x: Math.cos(angle) * distance,
         y: Math.sin(angle) * distance,
@@ -100,7 +97,7 @@ for (let i = 0; i < CONFIG.STAR_COUNT; i++) {
 
 function drawStars() {
     ctx.save();
-    ctx.translate(CONFIG.CENTER_X, CONFIG.CENTER_Y);
+    ctx.translate(center_x, center_y);
     for (let i = 0; i < stars.length; i++) {
         const star = stars[i];
         ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;

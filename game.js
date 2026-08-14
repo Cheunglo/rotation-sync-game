@@ -101,7 +101,7 @@ function update(deltaTime) {
 
         if (misalignedTime >= dynamicFailureLimit) {
             gameOver = true;
-        }       
+        }
     }
 }
 
