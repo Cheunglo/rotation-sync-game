@@ -41,23 +41,34 @@ let center_y = 300;
 let sidebar_start_x = 800;
 
 function resizeCanvas() {
-    // Determine if layout should treat screen as mobile portrait or desktop landscape
     isMobile = window.innerWidth < 850;
 
     if (isMobile) {
+        // Use clientHeight instead of innerHeight to avoid mobile browser navigation bar crop shifts
         canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        canvas.height = document.documentElement.clientHeight;
+        
         center_x = canvas.width / 2;
-        center_y = canvas.height * 0.4; // Push play ring slightly up to leave space for text/buttons
-        sidebar_start_x = 0; // Stacks text underneath
+        center_y = canvas.height * 0.38; // Slightly raised to pull it away from the bottom text
+
+        // Shrink the geometry dimensions slightly on mobile so it fits small displays
+        CONFIG.RING_RADIUS = 80;             
+        CONFIG.NOTCH_OFFSET_Y = -90;         
+        CONFIG.TARGET_POINTER_LENGTH = 45;   
     } else {
         canvas.width = 1100;
         canvas.height = 600;
         center_x = 400;
         center_y = 300;
+        
+        // Restore standard desktop layout scaling dimensions
+        CONFIG.RING_RADIUS = 100;             
+        CONFIG.NOTCH_OFFSET_Y = -110;         
+        CONFIG.TARGET_POINTER_LENGTH = 60;   
         sidebar_start_x = 800;
     }
 }
+
 // Run immediately on boot
 resizeCanvas();
 window.addEventListener("resize", resizeCanvas);
