@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rotation Sync Game</title>
+    <style>
+        body { margin: 0; background: #111; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        canvas { border: 2px solid #fff; background: #000; }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="1100" height="600"></canvas>
+
+    <!-- The order here is critical: Config and engine variables must load first -->
+    <script src="config.js"></script>
+    <script src="entities.js"></script>
+    <script src="ui.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
+
