@@ -58,10 +58,10 @@ function renderSidebar() {
         
         // Draw a light touch delimiter button guide box at base
         ctx.strokeStyle = "#222233";
-        ctx.strokeRect(10, canvas.height - 45, canvas.width - 20, 35);
+        ctx.strokeRect(10, canvas.height - 55, canvas.width - 20, 35);
         ctx.fillStyle = "#333344";
         ctx.font = "bold 12px Arial";
-        ctx.fillText("TOUCH HERE TO CYCLE SPEED", canvas.width / 2, canvas.height - 23);
+        ctx.fillText("TOUCH HERE TO CYCLE SPEED", canvas.width / 2, canvas.height - 33);
     }
 }
 
