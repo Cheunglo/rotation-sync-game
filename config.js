@@ -1,8 +1,8 @@
 const CONFIG = {
     ALIGNMENT_GOAL_TIME: 2.0,     
     FAILURE_LIMIT_TIME: 5.0,      
-    ALIGNMENT_THRESHOLD: 0.30,    
-    PERFECT_THRESHOLD: 0.06,      
+    ALIGNMENT_THRESHOLD: 0.90,    
+    PERFECT_THRESHOLD: 0.30,      
     TARGET_BASE_SPEED: 0.4,       
     TARGET_SPEED_VARIANCE: 0.6,   
     LEVEL_DIFFICULTY_STEP: 0.25,  
@@ -27,7 +27,10 @@ const CONFIG = {
 
     // Difficulty modifiers
     FAILURE_DECREASE_PER_LEVEL: 0.2, 
-    FAILURE_LIMIT_FLOOR: 1.5         
+    FAILURE_LIMIT_FLOOR: 1.5,   
+    THRESHOLD_SHRINK_PER_LEVEL: 0.02, // Narrows the tracking windows per level (in radians)
+    ALIGNMENT_THRESHOLD_FLOOR: 0.12,  // Minimum allowed width for the outer window (~7 deg)
+    PERFECT_THRESHOLD_FLOOR: 0.03   // Minimum allowed width for the inner window (~1.7 deg)
 };
 
 // Core Canvas and global layout sizing variables

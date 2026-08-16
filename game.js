@@ -55,19 +55,28 @@ function update(deltaTime) {
         star.x = rx;
         star.y = ry;
     }
-
-    // Measure angular distance differences 
+    // --- REPLACE THE ANGLE TRACKING BLOCK INSIDE UPDATE IN GAME.JS ---
     let angleDifference = Math.abs(player.angle - target.angle);
     if (angleDifference > Math.PI) {
         angleDifference = (Math.PI * 2) - angleDifference;
     }
 
-    // Process synchronization timelines
-    if (angleDifference <= CONFIG.ALIGNMENT_THRESHOLD) {
+    // Calculate dynamic thresholds that shrink as levels scale up
+    const currentAlignmentThreshold = Math.max(
+        CONFIG.ALIGNMENT_THRESHOLD_FLOOR,
+        CONFIG.ALIGNMENT_THRESHOLD - (level * CONFIG.THRESHOLD_SHRINK_PER_LEVEL)
+    );
+    const currentPerfectThreshold = Math.max(
+        CONFIG.PERFECT_THRESHOLD_FLOOR,
+        //CONFIG.PERFECT_THRESHOLD - (level * (CONFIG.THRESHOLD_SHRINK_PER_LEVEL * 0.2)) // Shrinks slower than outer
+        currentAlignmentThreshold / 3.0
+    );
+
+    if (angleDifference <= currentAlignmentThreshold) {
         isTracking = true;
         misalignedTime = 0; 
 
-        if (angleDifference <= CONFIG.PERFECT_THRESHOLD) {
+        if (angleDifference <= currentPerfectThreshold) {
             isPerfectTracking = true;
             alignmentTime += deltaTime * 2.0; 
             perfectStreakTimer += deltaTime; 
